@@ -55,7 +55,7 @@ const App = () => {
                                 <Route path="/actors/:actorId" element={<ActorDetailPage/>}/>
                                 <Route path="/movies/:movieId/actors/:actorId" element={<ActorDetailPage/>}/>
                                 <Route path="/login" element={<LoginPage/>}/>
-                                <Route path="/register" element={<SignUpPage/>}/>
+                                <Route path="/signup" element={<SignUpPage/>}/>
                             </Routes>
                         </ActorsContextProvider>
                     </MoviesContextProvider>
