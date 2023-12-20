@@ -112,3 +112,24 @@ export const signup = async (username, password) => {
     });
     return response.json();
 };
+
+export const getFavouriteMovies = async (username) => {
+    const response = await fetch(
+        `http://localhost:8080/api/users/${username}/movies`
+    )
+    return response.json();
+}
+
+export const getMustWatchMovies = async (username) => {
+    const response = await fetch(
+        `http://localhost:8080/api/users/${username}/toWatch`
+    )
+    return response.json();
+}
+
+export const getFavouriteActors = async (username) => {
+    const response = await fetch(
+        `http://localhost:8080/api/users/${username}/actors`
+    )
+    return response.json();
+}

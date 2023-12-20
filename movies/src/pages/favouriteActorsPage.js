@@ -1,13 +1,33 @@
-import React, { useContext } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import ActorListPageTemplate from "../components/templatePage/templateActorListPage"; // 调整为正确的路径
-import { ActorsContext } from "../contexts/actorsContext";
 import { useQueries } from "react-query";
-import {getActor} from "../api/tmdb-api";
+import {getActor, getFavouriteActors} from "../api/tmdb-api";
 import Spinner from "../components/spinner";
 import RemoveFromStar from "../components/cardIcons/removeFromStar";
+import {AuthContext} from "../contexts/authContext";
+import {useNavigate} from "react-router-dom";
 
 const FavoriteActorsPage = () => {
-    const { myStar: actorIds } = useContext(ActorsContext);
+    const {isAuthenticated, userName} = useContext(AuthContext);
+    const [actorIds, setActorIds] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!isAuthenticated) {
+            navigate('/login');
+        } else {
+            const fetchFavouriteActors = async () => {
+                try {
+                    const ids = await getFavouriteActors(userName);
+                    setActorIds(ids);
+                } catch (error) {
+                    console.error("Failed to fetch favourite actors", error);
+                }
+            };
+
+            fetchFavouriteActors();
+        }
+    }, [userName, isAuthenticated, navigate, actorIds]);
 
     const favoriteActorQueries = useQueries(
         actorIds.map((actorId) => {

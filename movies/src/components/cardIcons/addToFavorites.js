@@ -7,16 +7,30 @@ import {useNavigate} from "react-router-dom";
 
 const AddToFavoritesIcon = ({movie}) => {
     const context = useContext(MoviesContext);
-    const {isAuthenticated} = useContext(AuthContext);
+    const {isAuthenticated, userName} = useContext(AuthContext);
     const navigate = useNavigate();
 
-    const handleAddToFavorites = (e) => {
+    const handleAddToFavorites = async (e) => {
         if (isAuthenticated) {
             e.preventDefault();
-            context.addToFavorites(movie);
+            try {
+                // 发送请求到后端，更新用户的喜欢电影列表
+                await fetch(`http://localhost:8080/api/users/movies`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: userName,
+                        movieId: movie.id
+                    }),
+                });
+                context.addToFavorites(movie); // 更新前端上下文
+            } catch (error) {
+                console.error('Error adding to favorites movies:', error);
+            }
         } else {
-            // Redirect to login page
-            console.log('Redirecting to login page');
+            // 重定向到登录页面
             navigate('/login');
         }
     };
