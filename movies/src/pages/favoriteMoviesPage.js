@@ -1,36 +1,17 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
 import PageTemplate from "../components/templatePage/templateMovieListPage";
+import {MoviesContext} from "../contexts/moviesContext";
 import {useQueries} from "react-query";
-import {getFavouriteMovies, getMovie} from "../api/tmdb-api";
+import {getMovie} from "../api/tmdb-api";
 import Spinner from '../components/spinner';
 import RemoveFromFavorites from "../components/cardIcons/removeFromFavorites";
 import WriteReview from "../components/cardIcons/writeReview";
-import {AuthContext} from "../contexts/authContext";
-import {useNavigate} from "react-router-dom";
 
 const FavoriteMoviesPage = () => {
-    const {isAuthenticated, userName} = useContext(AuthContext);
-    const [movieIds, setMovieIds] = useState([]);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/login');
-        } else {
-            const fetchFavouriteMovies = async () => {
-                try {
-                    const ids = await getFavouriteMovies(userName);
-                    setMovieIds(ids);
-                } catch (error) {
-                    console.error("Failed to fetch favourite movies", error);
-                }
-            };
-
-            fetchFavouriteMovies();
-        }
-    }, [userName, isAuthenticated, navigate, movieIds]);
+    const {favorites: movieIds} = useContext(MoviesContext);
 
     // Create an array of queries and run in parallel.
+    console.log(movieIds)
     const favoriteMovieQueries = useQueries(
         movieIds.map((movieId) => {
             return {

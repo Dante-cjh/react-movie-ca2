@@ -1,5 +1,4 @@
 import React, {useContext} from "react";
-import {MoviesContext} from "../../../contexts/moviesContext";
 import Avatar from '@mui/material/Avatar';
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -15,21 +14,28 @@ import StarRateIcon from "@mui/icons-material/StarRate";
 import Grid from "@mui/material/Grid";
 import img from '../../../images/film-poster-placeholder.png'
 import PlayListAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
+import {AuthContext} from "../../../contexts/authContext";
+import {MoviesContext} from "../../../contexts/moviesContext";
 
 export default function MovieCard({movie, action}) {
-    const {favorites, addToFavorites} = useContext(MoviesContext);
-    const {toWatch, addToWatch} = useContext(MoviesContext);
+    const {favorites, toWatch} = useContext(MoviesContext);
+    const {isAuthenticated} = useContext(AuthContext);
 
-    if (favorites.find((id) => id === movie.id)) {
-        movie.favorite = true;
-    } else {
-        movie.favorite = false
-    }
-
-    if (toWatch.find((id) => id === movie.id)) {
-        movie.toWatch = true;
-    } else {
+    if (!isAuthenticated) {
+        movie.favorite = false;
         movie.toWatch = false;
+    } else {
+        if (favorites.find((id) => id === movie.id)) {
+            movie.favorite = true;
+        } else {
+            movie.favorite = false;
+        }
+
+        if (toWatch.find((id) => id === movie.id)) {
+            movie.toWatch = true;
+        } else {
+            movie.toWatch = false;
+        }
     }
 
     return (

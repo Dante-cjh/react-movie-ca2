@@ -7,29 +7,17 @@ import {useNavigate} from "react-router-dom";
 
 const RemoveFromFavoritesIcon = ({movie}) => {
     const context = useContext(MoviesContext);
-    const {isAuthenticated, userName} = useContext(AuthContext);
+    const {isAuthenticated} = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleRemoveFromFavorites = async (e) => {
-        e.preventDefault();
         if (isAuthenticated) {
-            try {
-                await fetch(`http://localhost:8080/api/users/movies`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({username: userName, movieId: movie.id}),
-                });
-                // 更新前端状态或上下文
-            } catch (error) {
-                console.error('Error removing from favorite movies:', error);
-            }
+            e.preventDefault();
+            context.removeFromFavorites(movie);
         } else {
             // 重定向到登录页面
             navigate('/login');
         }
-        context.removeFromFavorites(movie);
     };
 
     return (

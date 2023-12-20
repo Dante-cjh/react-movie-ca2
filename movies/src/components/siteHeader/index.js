@@ -51,7 +51,6 @@ const SiteHeader = ({history}) => {
 
     const handleAvatarClick = () => {
         if (isAuthenticated) {
-            console.log("cjh" + drawerOpen.right);
             toggleDrawer(true);
         } else {
             // Redirect to login page
@@ -67,9 +66,7 @@ const SiteHeader = ({history}) => {
     };
 
     const toggleDrawer = (open) => {
-        console.log(open)
         setDrawerOpen({"right": open});
-        console.log(typeof open)
     };
 
     const drawerList = () => (

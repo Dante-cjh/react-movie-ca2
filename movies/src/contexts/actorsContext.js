@@ -1,25 +1,33 @@
-import React, { useState } from "react";
+import React, {useContext, useState} from "react";
+import {AuthContext} from "./authContext";
+import {addFavouriteActors, getFavouriteActors, removeFavouriteActors} from "../api/tmdb-api";
 
 export const ActorsContext = React.createContext(null);
 
 const ActorsContextProvider = (props) => {
     const [myStar, setToStar] = useState([]);
+    const {isAuthenticated, userName} = useContext(AuthContext);
 
-    const addToStar = (actor) => {
+    const addToStar = async (actor) => {
         let newToStar = [];
-        if (!myStar.includes(actor.id)){
-            newToStar = [...myStar, actor.id];
+        if (isAuthenticated) {
+            newToStar = await getFavouriteActors(userName);
+            console.log(newToStar);
         }
-        else{
+        if (!myStar.includes(actor.id)) {
+            newToStar = [...myStar, actor.id];
+            await addFavouriteActors(userName, actor);
+        } else {
             newToStar = [...myStar];
         }
         setToStar(newToStar)
     };
 
-    const removeFromStar = (actor) => {
-        setToStar( myStar.filter(
+    const removeFromStar = async (actor) => {
+        setToStar(myStar.filter(
             (mId) => mId !== actor.id
-        ) )
+        ))
+        await removeFavouriteActors(userName, actor);
     };
 
     return (

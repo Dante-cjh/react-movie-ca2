@@ -1,33 +1,13 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, {useContext} from "react";
 import PageTemplate from "../components/templatePage/templateMovieListPage";
+import {MoviesContext} from "../contexts/moviesContext";
 import {useQueries} from "react-query";
-import {getMovie, getMustWatchMovies} from "../api/tmdb-api";
+import {getMovie} from "../api/tmdb-api";
 import Spinner from '../components/spinner';
 import RemoveFromToWatchIcon from "../components/cardIcons/removeFromWatch";
-import {AuthContext} from "../contexts/authContext";
-import {useNavigate} from "react-router-dom";
 
 const ToWatchMoviesPage = () => {
-    const {isAuthenticated, userName} = useContext(AuthContext);
-    const [movieIds, setMovieIds] = useState([]);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/login');
-        } else {
-            const fetchToWatchMovies = async () => {
-                try {
-                    const ids = await getMustWatchMovies(userName);
-                    setMovieIds(ids);
-                } catch (error) {
-                    console.error("Failed to fetch must watch movies", error);
-                }
-            };
-
-            fetchToWatchMovies();
-        }
-    }, [userName, isAuthenticated, navigate, movieIds]);
+    const {toWatch: movieIds} = useContext(MoviesContext);
 
     // Create an array of queries and run in parallel.
     console.log(movieIds)

@@ -9,14 +9,20 @@ import Avatar from "@mui/material/Avatar";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import CardHeader from "@mui/material/CardHeader";
 import {ActorsContext} from "../../../contexts/actorsContext";
+import {AuthContext} from "../../../contexts/authContext";
 
 const ActorCard = ({actor, action}) => {
-    const {myStar, addToStar} = useContext(ActorsContext);
+    const {myStar} = useContext(ActorsContext);
+    const {isAuthenticated} = useContext(AuthContext);
 
-    if (myStar.find((id) => id === actor.id)) {
-        actor.favorite = true;
+    if (!isAuthenticated) {
+        actor.favorite = false;
     } else {
-        actor.favorite = false
+        if (myStar.find((id) => id === actor.id)) {
+            actor.favorite = true;
+        } else {
+            actor.favorite = false
+        }
     }
 
     return (

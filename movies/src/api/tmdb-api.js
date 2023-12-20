@@ -120,6 +120,31 @@ export const getFavouriteMovies = async (username) => {
     return response.json();
 }
 
+export const addFavouriteMovies = async (username, movie) => {
+    const response = await fetch(`http://localhost:8080/api/users/movies`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            movieId: movie.id
+        }),
+    });
+    return response.json();
+}
+
+export const removeFavouriteMovies = async (username, movie) => {
+    const response = await fetch(`http://localhost:8080/api/users/movies`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username: username, movieId: movie.id}),
+    });
+    return response.json();
+}
+
 export const getMustWatchMovies = async (username) => {
     const response = await fetch(
         `http://localhost:8080/api/users/${username}/toWatch`
@@ -127,9 +152,59 @@ export const getMustWatchMovies = async (username) => {
     return response.json();
 }
 
+export const addMustWatchMovies = async (username, movie) => {
+    const response = await fetch(`http://localhost:8080/api/users/toWatch`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            movieId: movie.id
+        }),
+    });
+    return response.json();
+}
+
+export const removeMustWatchMovies = async (username, movie) => {
+    const response = await fetch(`http://localhost:8080/api/users/toWatch`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username: username, movieId: movie.id}),
+    });
+    return response.json();
+}
+
 export const getFavouriteActors = async (username) => {
     const response = await fetch(
         `http://localhost:8080/api/users/${username}/actors`
     )
+    return response.json();
+}
+
+export const addFavouriteActors = async (username, actor) => {
+    const response = await fetch(`http://localhost:8080/api/users/actors`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            username: username,
+            actorId: actor.id
+        }),
+    });
+    return response.json();
+}
+
+export const removeFavouriteActors = async (username, actor) => {
+    const response = await fetch(`http://localhost:8080/api/users/actors`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username: username, actorId: actor.id}),
+    });
     return response.json();
 }
