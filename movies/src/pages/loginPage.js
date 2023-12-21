@@ -23,7 +23,10 @@ const LoginPage = props => {
             console.log("Login success")
             setMsg(message);
             setMsgType("success");
-            navigate("/");
+            const redirectPath = context.redirect || '/';
+            context.setRedirect(null);
+            navigate(redirectPath);
+            // navigate("/");
         } else {
             switch (status) {
                 case 401:

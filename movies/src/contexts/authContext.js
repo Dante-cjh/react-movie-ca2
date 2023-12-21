@@ -3,6 +3,7 @@ import {
     login,
     signup
 } from "../api/tmdb-api";
+import {navigate} from "@storybook/addon-links";
 
 export const AuthContext = createContext(null);
 
@@ -11,6 +12,7 @@ export const AuthContextProvider = (props) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authToken, setAuthToken] = useState(existingToken);
     const [userName, setUserName] = useState("");
+    const [redirect, setRedirect] = useState(null);
 
     //Function to put JWT token in local storage.
     const setToken = (data) => {
@@ -45,7 +47,9 @@ export const AuthContextProvider = (props) => {
                 authenticate,
                 register,
                 signOut,
-                userName
+                userName,
+                redirect,
+                setRedirect
             }}
         >
             {props.children}
