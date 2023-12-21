@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "./authContext";
 import {
     addFavouriteMovies,
@@ -20,6 +20,20 @@ const MoviesContextProvider = (props) => {
     const [toWatch, setToWatch] = useState([]);
     const {isAuthenticated, userName} = useContext(AuthContext);
 
+    useEffect( () => {
+        if (!isAuthenticated){
+            setFavorites([]);
+            setMyReviews([]);
+            setToWatch([]);
+        } else {
+            async function fetchData() {
+                setFavorites(await getFavouriteMovies(userName));
+                setToWatch(await getMustWatchMovies(userName));
+                setMyReviews(await getUserMovieReviews(userName));
+            }
+            fetchData();
+        }
+    }, [isAuthenticated, userName]);
     const addToFavorites = async (movie) => {
         let newFavorites = [];
         if (isAuthenticated) {

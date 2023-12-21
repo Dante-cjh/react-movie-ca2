@@ -21,6 +21,7 @@ import AuthContextProvider from "./contexts/authContext";
 import LoginPage from "./pages/loginPage";
 import SignUpPage from "./pages/signUpPage";
 import UserReviewPage from "./pages/userReviewPage";
+import ProtectedRoutes from "./protectedRoutes";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -41,23 +42,25 @@ const App = () => {
                     <MoviesContextProvider>
                         <ActorsContextProvider>
                             <Routes>
-                                <Route path="/movies/favorites" element={<FavoriteMoviesPage/>}/>
                                 <Route path="/movies/upcoming" element={<UpcomingMoviePage/>}/>
                                 <Route path="/movies/trending" element={<MovieTrendingPage/>}/>
-                                <Route path="/movies/toWatch" element={<ToWatchMoviesPage/>}/>
                                 <Route path="/reviews/:id" element={<MovieReviewPage/>}/>
-                                <Route path="/reviews/form" element={<AddMovieReviewPage/>}/>
-                                <Route path="/reviews/my" element={<UserReviewPage/>}/>
                                 <Route path="/movies/:id" element={<MoviePage/>}/>
                                 <Route path="/actors/:actorId/movies/:id" element={<MoviePage/>}/>
                                 <Route path="/" element={<HomePage/>}/>
                                 <Route path="*" element={<Navigate to="/"/>}/>
                                 <Route path="/actor" element={<ActorPage/>}/>
-                                <Route path="/actor/favorites" element={<FavoriteActorsPage/>}/>
                                 <Route path="/actors/:actorId" element={<ActorDetailPage/>}/>
                                 <Route path="/movies/:movieId/actors/:actorId" element={<ActorDetailPage/>}/>
                                 <Route path="/login" element={<LoginPage/>}/>
                                 <Route path="/signup" element={<SignUpPage/>}/>
+                                <Route element={<ProtectedRoutes />}>
+                                    <Route path="/movies/favorites" element={<FavoriteMoviesPage/>}/>
+                                    <Route path="/movies/toWatch" element={<ToWatchMoviesPage/>}/>
+                                    <Route path="/actor/favorites" element={<FavoriteActorsPage/>}/>
+                                    <Route path="/reviews/form" element={<AddMovieReviewPage/>}/>
+                                    <Route path="/reviews/my" element={<UserReviewPage/>}/>
+                                </Route>
                             </Routes>
                         </ActorsContextProvider>
                     </MoviesContextProvider>

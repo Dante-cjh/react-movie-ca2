@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "./authContext";
 import {addFavouriteActors, getFavouriteActors, removeFavouriteActors} from "../api/tmdb-api";
 
@@ -8,6 +8,16 @@ const ActorsContextProvider = (props) => {
     const [myStar, setToStar] = useState([]);
     const {isAuthenticated, userName} = useContext(AuthContext);
 
+    useEffect(() => {
+        if (!isAuthenticated) {
+            setToStar([]);
+        } else {
+            async function fetchData() {
+                setToStar(await getFavouriteActors(userName));
+            }
+            fetchData();
+        }
+    }, [isAuthenticated, userName]);
     const addToStar = async (actor) => {
         let newToStar = [];
         if (isAuthenticated) {

@@ -87,7 +87,6 @@ router.delete('/movies', async (req, res) => {
 
 router.get('/:username/actors', async (req, res) => {
     const username = req.params.username;
-
     try {
         const user = await User.findOne({username}).select('favouriteActors');
         res.status(200).json(user.favouriteActors);
@@ -99,7 +98,6 @@ router.get('/:username/actors', async (req, res) => {
 router.post('/actors', async (req, res) => {
     const userName = req.body.username;
     const actorId = req.body.actorId;
-
     try {
         await User.findOneAndUpdate(
             {username: userName}, // 使用用户名作为查找条件
