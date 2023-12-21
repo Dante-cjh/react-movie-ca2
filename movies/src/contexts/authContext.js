@@ -1,5 +1,5 @@
-import React, { useState, createContext } from "react";
-import { login, signup } from "../api/tmdb-api";
+import React, {useState, createContext} from "react";
+import {login, signup} from "../api/tmdb-api";
 
 export const AuthContext = createContext(null);
 
@@ -21,13 +21,14 @@ export const AuthContextProvider = (props) => {
             setToken(result.token)
             setIsAuthenticated(true);
             setUserName(username);
+            return {success: true, status: result.status, message: "Login Successfully!"}
         }
+        return {success: false, status: result.status, message: result.message};
     };
 
     const register = async (username, password) => {
         const result = await signup(username, password);
-        console.log(result.code);
-        return (result.code === 201);
+        return {success: result.success, status: result.status, message: result.message};
     };
 
     const signOut = () => {

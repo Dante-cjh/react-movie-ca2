@@ -1,9 +1,9 @@
 import React, { useContext, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import {Navigate, useLocation, useNavigate} from "react-router-dom";
 import { AuthContext } from '../contexts/authContext';
 import { Link } from "react-router-dom";
 import TextField from "@mui/material/TextField";
-import {Container} from "@mui/material";
+import {Alert, Container} from "@mui/material";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -13,19 +13,34 @@ const LoginPage = props => {
 
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [msg, setMsg] = useState("");
+    const [msgType, setMsgType] = useState("");
+    const navigate = useNavigate();
 
-    const login = () => {
-        context.authenticate(userName, password);
+    const login = async () => {
+        const {success, status, message} = await context.authenticate(userName, password);
+        if (success) {
+            console.log("Login success")
+            setMsg(message);
+            setMsgType("success");
+            navigate("/");
+        } else {
+            switch (status) {
+                case 401:
+                    setMsgType("warning");
+                    break;
+                default:
+                    setMsgType("error");
+                    break;
+            }
+            setMsg(message);
+        }
     };
 
     let location = useLocation();
 
     // Set 'from' to path where browser is redirected after a successful login - either / or the protected path user requested
     const { from } = location.state ? { from: location.state.from.pathname } : { from: "/" };
-
-    if (context.isAuthenticated === true) {
-        return <Navigate to={from} />;
-    }
 
     return (
         <Container maxWidth="xs" sx={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -34,6 +49,7 @@ const LoginPage = props => {
                     Login
                 </Typography>
                 <form noValidate> {/* Update with your form handling logic */}
+                    {msg && <Alert severity={msgType}>{msg}</Alert>}
                     <TextField
                         variant="outlined"
                         margin="normal"

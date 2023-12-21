@@ -1,5 +1,5 @@
 import React, {useContext, useState} from "react";
-import {Navigate} from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import {AuthContext} from '../contexts/authContext';
 import TextField from "@mui/material/TextField";
 import {Alert, Container} from "@mui/material";
@@ -15,13 +15,18 @@ const SignUpPage = props => {
     const [registered, setRegistered] = useState(false);
     const [passwordError1, setPasswordError1] = useState("");
     const [passwordError2, setPasswordError2] = useState("");
-    const register = () => {
+    const [msg, setMsg] = useState("");
+    const [msgType, setMsgType] = useState("");
+    const navigate = useNavigate();
+    const register = async () => {
+        setPasswordError1("");
+        setPasswordError2("");
+        setMsg("");
         let passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
         const validPassword = passwordRegEx.test(password);
 
         if (!validPassword) {
-            setPasswordError1("密码必须包含数字、字母和特殊字符。");
-            return;
+            setPasswordError1("密码大于8位(包含数字、字母和特殊字符)");
         } else {
             setPasswordError1("");
         }
@@ -35,8 +40,26 @@ const SignUpPage = props => {
         if (validPassword && password === passwordAgain) {
             setPasswordError1("");
             setPasswordError2("");
-            context.register(userName, password);
-            setRegistered(true);
+            const {success, status, message} = await context.register(userName, password);
+            console.log(status);
+            if (success){
+                console.log(status)
+                console.log(typeof status)
+                setMsg(message);
+                setMsgType("success");
+                setRegistered(true);
+                navigate('/login');
+            } else {
+                switch (status) {
+                    case 401:
+                        setMsgType("warning");
+                        break;
+                    default:
+                        setMsgType("error");
+                        break;
+                }
+                setMsg(message);
+            }
         }
     }
 
@@ -51,6 +74,7 @@ const SignUpPage = props => {
                 <Typography variant="h5" align="center" gutterBottom>
                     Sign Up
                 </Typography>
+                {msg && <Alert severity={msgType}>{msg}</Alert>}
                 <TextField
                     variant="outlined"
                     margin="normal"

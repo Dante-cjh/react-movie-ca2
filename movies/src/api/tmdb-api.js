@@ -92,14 +92,23 @@ export const getActorFilmCredits = async ({queryKey}) => {
 }
 
 export const login = async (username, password) => {
-    const response = await fetch('http://localhost:8080/api/users', {
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        method: 'post',
-        body: JSON.stringify({ username: username, password: password })
-    });
-    return response.json();
+    try{
+        const response = await fetch('http://localhost:8080/api/users', {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'post',
+            body: JSON.stringify({ username: username, password: password })
+        });
+        const data = await response.json()
+        if (!response.ok){
+            return {success: false,status: response.status, message: data.msg || "Login failed"};
+        }
+        return data;
+    } catch (err) {
+        return {success: false, status: 500, message: err.message}
+    }
+
 };
 
 export const signup = async (username, password) => {
@@ -110,7 +119,11 @@ export const signup = async (username, password) => {
         method: 'post',
         body: JSON.stringify({ username: username, password: password })
     });
-    return response.json();
+    const data = await response.json();
+    if (!response.ok){
+        return {success: false, status: response.status, message: data.msg + "😭" || "Sign Up failed😢"};
+    }
+    return data;
 };
 
 export const getFavouriteMovies = async (username) => {
