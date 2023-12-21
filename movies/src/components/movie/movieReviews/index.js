@@ -7,15 +7,18 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { Link } from "react-router-dom";
-import { getMovieReviews } from "../../../api/tmdb-api";
+import { getMovieReviews, getUsersMovieReviews } from "../../../api/tmdb-api";
 import { excerpt } from "../../../util";
 
 export default function MovieReviews({ movie }) {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    getMovieReviews(movie.id).then((reviews) => {
-      setReviews(reviews);
+    getMovieReviews(movie.id).then((reviewsFromGetMovieReviews) => {
+      console.log(movie.id);
+      getUsersMovieReviews(movie.id).then((reviewsFromGetUsersMovieReviews) => {
+        setReviews([...reviewsFromGetUsersMovieReviews, ...reviewsFromGetMovieReviews]);
+      });
     });
   }, []);
 

@@ -62,8 +62,12 @@ export const getMovieReviews = async (id) => {
     try {
         const response = await fetch(
             `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.TMDB_KEY}`
-        );
-        return await response.json()
+        ).then((res) => res.json())
+            .then((json) => {
+                // console.log(json.results);
+                return json.results;
+            });
+        return await response;
     } catch (error) {
         throw error;
     }

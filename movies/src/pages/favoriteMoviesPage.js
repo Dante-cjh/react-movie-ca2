@@ -11,7 +11,6 @@ const FavoriteMoviesPage = () => {
     const {favorites: movieIds} = useContext(MoviesContext);
 
     // Create an array of queries and run in parallel.
-    console.log(movieIds)
     const favoriteMovieQueries = useQueries(
         movieIds.map((movieId) => {
             return {

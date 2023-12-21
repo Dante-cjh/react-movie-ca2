@@ -41,7 +41,6 @@ const SignUpPage = props => {
             setPasswordError1("");
             setPasswordError2("");
             const {success, status, message} = await context.register(userName, password);
-            console.log(status);
             if (success){
                 console.log(status)
                 console.log(typeof status)

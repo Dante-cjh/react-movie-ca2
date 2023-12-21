@@ -9,6 +9,7 @@ import {MoviesContext} from "../../../contexts/moviesContext";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import {useNavigate} from "react-router-dom";
+import {AuthContext} from "../../../contexts/authContext";
 
 const ratings = [
     {
@@ -62,14 +63,15 @@ const styles = {
 
 const ReviewForm = ({movie}) => {
     const [rating, setRating] = useState(3);
-
+    const {userName} = useContext(AuthContext);
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
 
     const context = useContext(MoviesContext);
 
     const defaultValues = {
-        author: "",
+        id: Math.floor(Math.random() * 1000000),
+        author: userName,
         review: "",
         agree: false,
         rating: "3",
@@ -91,12 +93,16 @@ const ReviewForm = ({movie}) => {
         setRating(event.target.value);
     };
 
-    const onSubmit = (review) => {
-        review.movieId = movie.id;
-        review.rating = rating;
-        // console.log(review);
-        context.addReview(movie, review);
-        setOpen(true); // NEW
+    const onSubmit = async (data) => {
+        const review = {
+            id: Math.floor(Math.random() * 1000000),
+            movieId: movie.id,
+            author: data.author, // 使用 userName 作为 author
+            content: data.review,
+            rating: rating,
+        };
+        await context.addReview(review);
+        setOpen(true);
     };
 
     return (
@@ -126,20 +132,20 @@ const ReviewForm = ({movie}) => {
                 <Controller
                     name="author"
                     control={control}
-                    rules={{required: "Name is required"}}
-                    defaultValue=""
-                    render={({field: {onChange, value}}) => (
+                    defaultValue={userName} // 将默认值设置为 userName
+                    render={({field: {onChange}}) => (
                         <TextField
                             sx={{width: "40ch"}}
                             variant="outlined"
                             margin="normal"
                             required
                             onChange={onChange}
-                            value={value}
+                            value={userName} // 将值设置为 userName
                             id="author"
                             label="Author's name"
                             name="author"
                             autoFocus
+                            disabled // 禁止用户编辑
                         />
                     )}
                 />

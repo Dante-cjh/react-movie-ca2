@@ -32,14 +32,48 @@ export const getMovieImages = async ({queryKey}) => {
     return response.json();
 };
 
-export const getMovieReviews = async ({queryKey}) => {
-    const [, idPart] = queryKey;
-    const {id} = idPart;
+export const getMovieReviews = async (id) => {
     const response = await fetch(
         `http://localhost:8080/api/movies/tmdb/${id}/reviews`
     )
     return response.json();
 };
+
+export const getUsersMovieReviews = async (movieId) => {
+    const response = await fetch(
+        `http://localhost:8080/api/reviews/${movieId}`
+    )
+    return response.json();
+}
+
+export const getUserMovieReviews = async (author) => {
+    const response = await fetch(
+        `http://localhost:8080/api/reviews/${author}/reviews`
+    )
+    return response.json();
+}
+
+export const addMoviewReview = async (review) => {
+    const response = await fetch('http://localhost:8080/api/reviews/review', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(review)
+    });
+    return response.json();
+}
+
+export const deleteMovieReview = async (id) => {
+    const response = await fetch(`http://localhost:8080/api/reviews/review`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({id: id}),
+    });
+    return response.json();
+}
 
 export const getUpcomingMovie = async () => {
     const response = await fetch(
@@ -92,17 +126,17 @@ export const getActorFilmCredits = async ({queryKey}) => {
 }
 
 export const login = async (username, password) => {
-    try{
+    try {
         const response = await fetch('http://localhost:8080/api/users', {
             headers: {
                 'Content-Type': 'application/json'
             },
             method: 'post',
-            body: JSON.stringify({ username: username, password: password })
+            body: JSON.stringify({username: username, password: password})
         });
         const data = await response.json()
-        if (!response.ok){
-            return {success: false,status: response.status, message: data.msg || "Login failed"};
+        if (!response.ok) {
+            return {success: false, status: response.status, message: data.msg || "Login failed"};
         }
         return data;
     } catch (err) {
@@ -117,10 +151,10 @@ export const signup = async (username, password) => {
             'Content-Type': 'application/json'
         },
         method: 'post',
-        body: JSON.stringify({ username: username, password: password })
+        body: JSON.stringify({username: username, password: password})
     });
     const data = await response.json();
-    if (!response.ok){
+    if (!response.ok) {
         return {success: false, status: response.status, message: data.msg + "😭" || "Sign Up failed😢"};
     }
     return data;

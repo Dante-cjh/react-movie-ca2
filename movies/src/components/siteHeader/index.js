@@ -78,6 +78,7 @@ const SiteHeader = ({history}) => {
                     {label: "Favorites", path: "/movies/favorites"},
                     {label: "Must Watch", path: "/movies/toWatch"},
                     {label: "Chase Star", path: "/actor/favorites"},
+                    {label: "My Reviews", path: "/reviews/my"}
                 ].map((item, index) => (
                     <ListItem button key={item.label} disablePadding>
                         <ListItemButton to={item.path} component={Link}>

@@ -20,6 +20,7 @@ import FavoriteActorsPage from "./pages/favouriteActorsPage";
 import AuthContextProvider from "./contexts/authContext";
 import LoginPage from "./pages/loginPage";
 import SignUpPage from "./pages/signUpPage";
+import UserReviewPage from "./pages/userReviewPage";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -46,6 +47,7 @@ const App = () => {
                                 <Route path="/movies/toWatch" element={<ToWatchMoviesPage/>}/>
                                 <Route path="/reviews/:id" element={<MovieReviewPage/>}/>
                                 <Route path="/reviews/form" element={<AddMovieReviewPage/>}/>
+                                <Route path="/reviews/my" element={<UserReviewPage/>}/>
                                 <Route path="/movies/:id" element={<MoviePage/>}/>
                                 <Route path="/actors/:actorId/movies/:id" element={<MoviePage/>}/>
                                 <Route path="/" element={<HomePage/>}/>

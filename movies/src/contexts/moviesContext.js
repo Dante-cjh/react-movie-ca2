@@ -5,14 +5,18 @@ import {
     addMustWatchMovies,
     getFavouriteMovies,
     getMustWatchMovies,
-    removeFavouriteMovies, removeMustWatchMovies
+    removeFavouriteMovies,
+    removeMustWatchMovies,
+    addMoviewReview,
+    deleteMovieReview,
+    getUserMovieReviews
 } from "../api/tmdb-api";
 
 export const MoviesContext = React.createContext(null);
 
 const MoviesContextProvider = (props) => {
     const [favorites, setFavorites] = useState([]);
-    const [myReviews, setMyReviews] = useState({});
+    const [myReviews, setMyReviews] = useState([]);
     const [toWatch, setToWatch] = useState([]);
     const {isAuthenticated, userName} = useContext(AuthContext);
 
@@ -28,21 +32,19 @@ const MoviesContextProvider = (props) => {
             newFavorites = [...favorites];
         }
         setFavorites(newFavorites)
-        console.log(favorites)
     };
 
     const removeFromFavorites = async (movie) => {
         setFavorites(favorites.filter(
             (mId) => mId !== movie.id
         ))
-        await removeFavouriteMovies(userName,movie);
+        await removeFavouriteMovies(userName, movie);
     };
 
     const addToWatch = async (movie) => {
         let newToWatch = [];
         if (isAuthenticated) {
             newToWatch = await getMustWatchMovies(userName);
-            console.log(newToWatch);
         }
         if (!toWatch.includes(movie.id)) {
             newToWatch = [...toWatch, movie.id];
@@ -60,21 +62,40 @@ const MoviesContextProvider = (props) => {
         await removeMustWatchMovies(userName, movie);
     };
 
-    const addReview = (movie, review) => {
-        setMyReviews({...myReviews, [movie.id]: review})
+    const addReview = async (review) => {
+        let newReviews = [];
+        console.log(review)
+        if (isAuthenticated) {
+            newReviews = await getUserMovieReviews(review.author);
+        }
+        if (!myReviews.includes(review)) {
+            newReviews = [...myReviews, review];
+            await addMoviewReview(review)
+        } else {
+            newReviews = [...myReviews];
+        }
+        setMyReviews(newReviews)
     };
-    //console.log(myReviews);
+
+    const removeReview = async (id) => {
+        setMyReviews(myReviews.filter(
+            (review) => review.id !== id
+        ));
+        await deleteMovieReview(id);
+    }
 
     return (
         <MoviesContext.Provider
             value={{
                 favorites,
                 toWatch,
+                myReviews,
                 addToFavorites,
                 addToWatch,
                 removeFromFavorites,
                 removeFromToWatch,
                 addReview,
+                removeReview
             }}
         >
             {props.children}
