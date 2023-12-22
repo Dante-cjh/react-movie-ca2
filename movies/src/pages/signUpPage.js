@@ -26,13 +26,13 @@ const SignUpPage = props => {
         const validPassword = passwordRegEx.test(password);
 
         if (!validPassword) {
-            setPasswordError1("密码大于8位(包含数字、字母和特殊字符)");
+            setPasswordError1("Password greater than 8 digits (contains numbers, letters and special characters)");
         } else {
             setPasswordError1("");
         }
 
         if (password !== passwordAgain) {
-            setPasswordError2("前后密码不一致");
+            setPasswordError2("Inconsistent passwords");
         } else {
             setPasswordError2("");
         }
